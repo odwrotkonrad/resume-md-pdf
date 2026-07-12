@@ -4,9 +4,15 @@ SHELL := zsh
 .SHELLFLAGS := -c
 
 WRAPPERS :=
-COMMANDS := install generate-pdfs generate-user-pdfs watch-pdfs compare-contents test-pdf
+COMMANDS := render-templates install generate-pdfs generate-user-pdfs watch-pdfs compare-contents test-pdf run-repo-ci-prepare-hooks run-repo-ci-precommit-all
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
+
+##[>] Docs [genai-include]
+#[what] render *.ontoRepo.tpl onto the repo (makefile.agents.md, repo-structure.md, CLAUDE.md, AGENTS.md, README.md)
+render-templates:
+	@che render-templates
+##[<] Docs
 
 ##[>] Setup [genai-include]
 #[what] install ruby gem dependencies
@@ -39,4 +45,14 @@ compare-contents:
 test-pdf:
 	@bundle exec ruby validation/test_pdf.rb
 ##[<] Validation
+
+##[>] CI [genai-include]
+#[what] install lefthook git hooks
+run-repo-ci-prepare-hooks:
+	@lefthook install --force
+
+#[what] run pre-commit hooks over all files (not just staged)
+run-repo-ci-precommit-all: run-repo-ci-prepare-hooks
+	@lefthook run pre-commit --all-files --force
+##[<] CI
 ##[<] 🤖🤖
