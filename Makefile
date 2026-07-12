@@ -15,7 +15,7 @@ render-templates:
 ##[<] Docs
 
 ##[>] Setup [genai-include]
-#[what] install ruby gem dependencies
+#[what] install ruby gem dependencies (needs ruby + bundler; PDF rendering needs Chrome/Chromium, override binary via BROWSER_PATH)
 install:
 	@bundle install
 
@@ -27,11 +27,11 @@ generate-pdfs:
 	@bundle exec ruby scripts/build_pdf.rb example/resume.md
 	@bundle exec ruby scripts/build_pdf.rb example/styled_resume.md
 
-#[what] render every private resume under .user/input/ to PDF
+#[what] render every private resume under .user/input/ (gitignored, never commit real data) to PDF
 generate-user-pdfs:
 	@for f in .user/input/*.md(N); do bundle exec ruby scripts/build_pdf.rb $$f; done
 
-#[what] watch both markdown sources, regenerate PDFs on save
+#[what] watch both example markdown sources, regenerate PDFs on save
 watch-pdfs:
 	@bundle exec ruby scripts/watch_pdfs.rb
 ##[<] PDF

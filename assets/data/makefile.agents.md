@@ -7,13 +7,13 @@
 
 ### Setup:
 
-`install` install ruby gem dependencies
+`install` install ruby gem dependencies (needs ruby + bundler; PDF rendering needs Chrome/Chromium, override binary via BROWSER_PATH)
 
 ### PDF:
 
 `generate-pdfs` render example/resume.md and example/styled_resume.md to PDF
-`generate-user-pdfs` render every private resume under .user/input/ to PDF
-`watch-pdfs` watch both markdown sources, regenerate PDFs on save
+`generate-user-pdfs` render every private resume under .user/input/ (gitignored, never commit real data) to PDF
+`watch-pdfs` watch both example markdown sources, regenerate PDFs on save
 
 ### Validation:
 

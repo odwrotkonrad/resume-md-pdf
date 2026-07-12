@@ -1,10 +1,8 @@
 # resume-md-pdf
 
-Single-page PDF resume from Markdown, Ruby only
+Single-page PDF resume from Markdown
 
 @assets/docs-agents/purpose.md
-
-@assets/docs-agents/usage.md
 
 @assets/data/makefile.agents.md
 
