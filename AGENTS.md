@@ -39,14 +39,6 @@ Behavior:
 - Prints timestamped logs to stdout.
 - Prints failures to stderr.
 
-## PDF to Markdown
-
-When converting a PDF resume to Markdown, use Markdownify MCP:
-
-`mcp__markdownify__pdf-to-markdown`
-
-Warning: output quality can vary; best for extracting raw text.
-
 ## Make Targets
 
 Use `make` targets from the repository root:
