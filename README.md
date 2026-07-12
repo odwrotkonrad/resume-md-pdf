@@ -1,13 +1,21 @@
 # resume-md-pdf
 
-Generates a single-page PDF resume from Markdown. The resume content in `example/` is fictional sample data.
+Generates a single-page PDF resume from Markdown, Ruby only: kramdown renders the Markdown, ferrum drives headless Chrome for the PDF. The resume content in `example/` is fictional sample data.
+
+## Setup
+
+```bash
+make install
+```
+
+Requires Ruby with bundler and a Chrome/Chromium binary (set `BROWSER_PATH` if not auto-detected).
 
 ## Private resume data
 
 Keep your real resume under `.user/input/` (gitignored, never tracked). Build it the same way:
 
 ```bash
-./scripts/build-pdf.sh .user/input/resume.md
+bundle exec ruby scripts/build_pdf.rb .user/input/resume.md
 make generate-user-pdfs
 ```
 
@@ -24,14 +32,8 @@ make generate-user-pdfs
 From the repository root, run:
 
 ```bash
-./scripts/build-pdf.sh example/resume.md
-./scripts/build-pdf.sh example/styled_resume.md
-```
-
-This uses:
-
-```bash
-npx --yes md-to-pdf <file>.md
+bundle exec ruby scripts/build_pdf.rb example/resume.md
+bundle exec ruby scripts/build_pdf.rb example/styled_resume.md
 ```
 
 ## Watch and auto-regenerate PDFs
@@ -39,7 +41,7 @@ npx --yes md-to-pdf <file>.md
 To continuously watch both Markdown files and regenerate PDFs on every save:
 
 ```bash
-./scripts/watch-pdfs.sh
+bundle exec ruby scripts/watch_pdfs.rb
 ```
 
 Watched files:
@@ -56,9 +58,18 @@ Output:
 ## Make targets
 
 ```bash
+make install
 make generate-pdfs
+make generate-user-pdfs
 make watch-pdfs
 make compare-contents
+make test-pdf
 ```
 
-`compare-contents` strips styles/HTML from `example/styled_resume.md` and compares it against `example/resume.md`, whitespace-insensitive, informational only. Artifacts land in `validation/artifacts/`.
+`compare-contents` strips styles/HTML from `example/styled_resume.md` and compares it against `example/resume.md`, whitespace-insensitive, informational only. `test-pdf` asserts the generated `example/styled_resume.pdf`: exists, single page, sane size, expected content. Artifacts land in `validation/artifacts/`.
+
+## CI
+
+- `build-pdf`: renders `example/styled_resume.pdf`, exposed as a browsable artifact ("resume pdf preview") on MRs.
+- `content-match`: informational content comparison.
+- `pdf-assertions`: runs `validation/test_pdf.rb` against the built artifact.
