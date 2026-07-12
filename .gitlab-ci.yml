@@ -1,0 +1,15 @@
+##[>] 🤖🤖
+content-match:
+  image: python:3.11-slim
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  script:
+    - python -m pip install --upgrade pip pytest
+    - pytest -s validation/test_content_match.py
+  artifacts:
+    when: always
+    paths:
+      - validation/artifacts/styled_resume_stripped.md
+      - validation/artifacts/diff.txt
+##[<] 🤖🤖

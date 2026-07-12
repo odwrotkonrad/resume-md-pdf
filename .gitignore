@@ -1,0 +1,8 @@
+pdf-mcp-server
+markdownify-mcp
+workshop/*
+!workshop/resume.md
+!workshop/styled_resume.md
+validation/__pycache__/
+validation/artifacts/*
+!validation/artifacts/.gitkeep
