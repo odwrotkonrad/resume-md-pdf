@@ -1,15 +1,46 @@
 ##[>] 🤖🤖
-content-match:
-  image: python:3.11-slim
+workflow:
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+stages:
+  - build
+  - validate
+
+build-pdf:
+  stage: build
+  image: node:22-bookworm-slim
+  variables:
+    PUPPETEER_SKIP_DOWNLOAD: "true"
   script:
-    - python -m pip install --upgrade pip pytest
+    - apt-get update -qq && apt-get install -y -qq --no-install-recommends chromium fonts-liberation > /dev/null
+    - npx --yes md-to-pdf example/styled_resume.md --launch-options '{"executablePath":"/usr/bin/chromium","args":["--no-sandbox","--disable-dev-shm-usage"]}'
+  artifacts:
+    expose_as: "resume pdf preview"
+    paths:
+      - example/styled_resume.pdf
+    expire_in: 30 days
+
+content-match:
+  stage: validate
+  image: python:3.11-slim
+  needs: []
+  script:
+    - python -m pip install --quiet --upgrade pip pytest
     - pytest -s validation/test_content_match.py
   artifacts:
     when: always
     paths:
       - validation/artifacts/styled_resume_stripped.md
       - validation/artifacts/diff.txt
+
+pdf-assertions:
+  stage: validate
+  image: python:3.11-slim
+  needs:
+    - build-pdf
+  script:
+    - python -m pip install --quiet --upgrade pip pytest pypdf
+    - pytest -s validation/test_pdf.py
 ##[<] 🤖🤖
