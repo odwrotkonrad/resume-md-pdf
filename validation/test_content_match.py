@@ -5,8 +5,8 @@ import difflib
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-RESUME = ROOT / "workshop" / "resume.md"
-STYLED = ROOT / "workshop" / "styled_resume.md"
+RESUME = ROOT / "example" / "resume.md"
+STYLED = ROOT / "example" / "styled_resume.md"
 ARTIFACTS = ROOT / "validation" / "artifacts"
 STRIPPED_OUT = ARTIFACTS / "styled_resume_stripped.md"
 DIFF_OUT = ARTIFACTS / "diff.txt"
@@ -51,7 +51,7 @@ def test_content_match_info_only() -> None:
         difflib.unified_diff(
             resume_lines,
             stripped_lines,
-            fromfile="workshop/resume.md",
+            fromfile="example/resume.md",
             tofile="validation/artifacts/styled_resume_stripped.md",
             lineterm="",
             n=3,

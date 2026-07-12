@@ -2,17 +2,17 @@
 
 ## Project Scope
 
-This repository generates a single-page PDF resume from Markdown. The resume content is fictional sample data, keep it that way: never commit real personal data.
+This repository generates a single-page PDF resume from Markdown. Tracked resume content is fictional sample data, keep it that way: never commit real personal data. Real resumes live only under `.user/input/` (gitignored), built with the same scripts or `make generate-user-pdfs`.
 
-Two source resumes:
+Two tracked source resumes:
 
-- `workshop/resume.md`
-- `workshop/styled_resume.md`
+- `example/resume.md`
+- `example/styled_resume.md`
 
 Generated PDFs are created next to their source Markdown files and stay untracked:
 
-- `workshop/resume.pdf`
-- `workshop/styled_resume.pdf`
+- `example/resume.pdf`
+- `example/styled_resume.pdf`
 
 ## Markdown to PDF
 
@@ -22,8 +22,8 @@ Preferred direct command for Markdown to PDF:
 
 Preferred scripted command:
 
-- `./scripts/build-pdf.sh workshop/resume.md`
-- `./scripts/build-pdf.sh workshop/styled_resume.md`
+- `./scripts/build-pdf.sh example/resume.md`
+- `./scripts/build-pdf.sh example/styled_resume.md`
 
 ## Continuous PDF Regeneration (Watcher)
 
@@ -34,7 +34,7 @@ Use the watcher to rebuild PDFs automatically on file changes:
 Behavior:
 
 - Runs an initial build for both resume files.
-- Watches `workshop/resume.md` and `workshop/styled_resume.md`.
+- Watches `example/resume.md` and `example/styled_resume.md`.
 - Rebuilds only the changed file.
 - Prints timestamped logs to stdout.
 - Prints failures to stderr.
@@ -45,8 +45,8 @@ Use `make` targets from the repository root:
 
 - `make compare-contents`
   - Runs `validation/test_content_match.py`.
-  - Strips styles/HTML from `workshop/styled_resume.md`.
-  - Compares against `workshop/resume.md` with whitespace-insensitive comparison.
+  - Strips styles/HTML from `example/styled_resume.md`.
+  - Compares against `example/resume.md` with whitespace-insensitive comparison.
   - Generates:
     - `validation/artifacts/styled_resume_stripped.md`
     - `validation/artifacts/diff.txt`

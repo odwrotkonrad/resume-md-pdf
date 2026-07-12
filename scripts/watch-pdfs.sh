@@ -2,8 +2,8 @@
 set -euo pipefail
 
 FILES=(
-  "workshop/resume.md"
-  "workshop/styled_resume.md"
+  "example/resume.md"
+  "example/styled_resume.md"
 )
 
 printf '[%s] Initial PDF build started\n' "$(date '+%Y-%m-%d %H:%M:%S')"
