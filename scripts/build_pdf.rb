@@ -4,19 +4,24 @@ require "kramdown"
 require "pathname"
 require "tmpdir"
 
-abort "Usage: ruby scripts/build_pdf.rb <markdown-file>" unless ARGV.size == 1
+abort "Usage: ruby scripts/build_pdf.rb <markdown-file> [out-dir]" unless (1..2).cover?(ARGV.size)
 
 src = Pathname.new(ARGV[0])
 abort "[#{Time.now.strftime('%F %T')}] ERROR: File not found: #{src}" unless src.file?
 
 out = src.sub_ext(".pdf")
+if ARGV[1]
+  out_dir = Pathname.new(ARGV[1])
+  out_dir.mkpath
+  out = out_dir.join(out.basename)
+end
 puts "[#{Time.now.strftime('%F %T')}] Rebuilding #{src}"
 
 body = Kramdown::Document.new(src.read).to_html
 html = <<~HTML
   <!DOCTYPE html>
   <html>
-  <head><meta charset="utf-8"></head>
+  <head><meta charset="utf-8"><base href="file://#{src.expand_path.dirname}/"></head>
   <body>#{body}</body>
   </html>
 HTML

@@ -11,8 +11,8 @@
 
 ### PDF:
 
-`generate-pdfs` render example/resume.md and example/styled_resume.md to PDF
-`generate-user-pdfs` render every private resume under .user/input/ (gitignored, never commit real data) to PDF
+`generate-pdfs` render every private resume under .user/input/ (gitignored, never commit real data) to PDF in .user/output/
+`generate-example-pdfs` render example/resume.md and example/styled_resume.md to PDF
 `watch-pdfs` watch both example markdown sources, regenerate PDFs on save
 
 ### Validation:

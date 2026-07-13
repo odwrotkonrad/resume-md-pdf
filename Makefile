@@ -4,7 +4,7 @@ SHELL := zsh
 .SHELLFLAGS := -c
 
 WRAPPERS :=
-COMMANDS := render-templates install generate-pdfs generate-user-pdfs watch-pdfs compare-contents test-pdf run-repo-ci-prepare-hooks run-repo-ci-precommit-all
+COMMANDS := render-templates install generate-pdfs generate-example-pdfs watch-pdfs compare-contents test-pdf run-repo-ci-prepare-hooks run-repo-ci-precommit-all
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
@@ -22,14 +22,14 @@ install:
 ##[<] Setup
 
 ##[>] PDF [genai-include]
-#[what] render example/resume.md and example/styled_resume.md to PDF
+#[what] render every private resume under .user/input/ (gitignored, never commit real data) to PDF in .user/output/
 generate-pdfs:
+	@for f in .user/input/*.md(N); do bundle exec ruby scripts/build_pdf.rb $$f .user/output; done
+
+#[what] render example/resume.md and example/styled_resume.md to PDF
+generate-example-pdfs:
 	@bundle exec ruby scripts/build_pdf.rb example/resume.md
 	@bundle exec ruby scripts/build_pdf.rb example/styled_resume.md
-
-#[what] render every private resume under .user/input/ (gitignored, never commit real data) to PDF
-generate-user-pdfs:
-	@for f in .user/input/*.md(N); do bundle exec ruby scripts/build_pdf.rb $$f; done
 
 #[what] watch both example markdown sources, regenerate PDFs on save
 watch-pdfs:
