@@ -1,15 +1,58 @@
 ##[>] 🤖🤖
-content-match:
-  image: python:3.11-slim
+workflow:
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+default:
+  image: ruby:3.4
+  before_script:
+    - bundle install --quiet
+
+stages:
+  - build
+  - validate
+
+variables:
+  CI_IMAGE: registry.gitlab.com/konradodwrot/infra/oci-images/ci-linux:latest
+
+validate-pre-commit-all:
+  stage: validate
+  image: $CI_IMAGE
+  needs: []
+  before_script: []
   script:
-    - python -m pip install --upgrade pip pytest
-    - pytest -s validation/test_content_match.py
+    - make run-repo-ci-precommit-all
+    - git diff --exit-code HEAD
+
+build-pdf:
+  stage: build
+  variables:
+    BROWSER_PATH: /usr/bin/chromium
+  script:
+    - apt-get update -qq && apt-get install -y -qq --no-install-recommends chromium fonts-liberation > /dev/null
+    - bundle exec ruby scripts/build_pdf.rb example/styled_resume.md
+  artifacts:
+    expose_as: "resume pdf preview"
+    paths:
+      - example/styled_resume.pdf
+    expire_in: 30 days
+
+content-match:
+  stage: validate
+  needs: []
+  script:
+    - bundle exec ruby validation/test_content_match.rb
   artifacts:
     when: always
     paths:
       - validation/artifacts/styled_resume_stripped.md
       - validation/artifacts/diff.txt
+
+pdf-assertions:
+  stage: validate
+  needs:
+    - build-pdf
+  script:
+    - bundle exec ruby validation/test_pdf.rb
 ##[<] 🤖🤖
