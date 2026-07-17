@@ -22,7 +22,7 @@ validate-pre-commit-all:
   needs: []
   before_script: []
   script:
-    - make run-repo-ci-precommit-all
+    - make repo-ci-precommit-all
     - git diff --exit-code HEAD
 
 build-pdf:
