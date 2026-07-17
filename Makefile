@@ -4,7 +4,7 @@ SHELL := zsh
 .SHELLFLAGS := -c
 
 WRAPPERS :=
-COMMANDS := render-templates install generate-pdfs generate-example-pdfs watch-pdfs compare-contents test-pdf run-repo-ci-prepare-hooks run-repo-ci-precommit-all
+COMMANDS := render-templates install generate-pdfs generate-example-pdfs watch-pdfs compare-contents test-pdf repo-ci-prepare-hooks repo-ci-precommit-all
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
@@ -48,11 +48,11 @@ test-pdf:
 
 ##[>] CI [genai-include]
 #[what] install lefthook git hooks
-run-repo-ci-prepare-hooks:
+repo-ci-prepare-hooks:
 	@lefthook install --force
 
 #[what] run pre-commit hooks over all files (not just staged)
-run-repo-ci-precommit-all: run-repo-ci-prepare-hooks
+repo-ci-precommit-all: repo-ci-prepare-hooks
 	@lefthook run pre-commit --all-files --force
 ##[<] CI
 ##[<] 🤖🤖
