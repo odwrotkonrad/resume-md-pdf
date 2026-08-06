@@ -14,7 +14,7 @@ stages:
   - validate
 
 variables:
-  CI_IMAGE: registry.gitlab.com/konradodwrot/infra/oci-images/ci-linux:latest
+  CI_IMAGE: registry.gitlab.com/konradodwrot/unrestricted/infra/oci-images/ci-linux:latest
 
 validate-pre-commit-all:
   stage: validate
