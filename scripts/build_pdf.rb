@@ -17,18 +17,18 @@ if ARGV[1]
 end
 puts "[#{Time.now.strftime('%F %T')}] Rebuilding #{src}"
 
-body = Kramdown::Document.new(src.read).to_html
-html = <<~HTML
+body_html = Kramdown::Document.new(src.read).to_html
+doc_html = <<~HTML
   <!DOCTYPE html>
   <html>
   <head><meta charset="utf-8"><base href="file://#{src.expand_path.dirname}/"></head>
-  <body>#{body}</body>
+  <body>#{body_html}</body>
   </html>
 HTML
 
 Dir.mktmpdir do |dir|
   html_path = File.join(dir, "#{src.basename('.md')}.html")
-  File.write(html_path, html)
+  File.write(html_path, doc_html)
 
   browser = Ferrum::Browser.new(
     headless: true,
