@@ -16,7 +16,7 @@ class TestContentMatch < Minitest::Test
     text.gsub(/\n{3,}/, "\n\n").strip + "\n"
   end
 
-  def normalize(markdown)
+  def normalize_whitespace(markdown)
     markdown.lines.map { |l| l.split.join(" ") }.join("\n").strip + "\n"
   end
 
@@ -26,17 +26,17 @@ class TestContentMatch < Minitest::Test
     stripped = strip_html_and_styles(STYLED.read)
     STRIPPED_OUT.write(stripped)
 
-    resume_lines = normalize(RESUME.read).lines
-    stripped_lines = normalize(stripped).lines
+    resume_lines = normalize_whitespace(RESUME.read).lines
+    stripped_lines = normalize_whitespace(stripped).lines
 
     diff = []
     [resume_lines.size, stripped_lines.size].max.times do |i|
-      a, b = resume_lines[i], stripped_lines[i]
-      next if a == b
+      resume_line, stripped_line = resume_lines[i], stripped_lines[i]
+      next if resume_line == stripped_line
 
       diff << "line #{i + 1}:"
-      diff << "- #{a&.chomp}"
-      diff << "+ #{b&.chomp}"
+      diff << "- #{resume_line&.chomp}"
+      diff << "+ #{stripped_line&.chomp}"
     end
 
     if diff.empty?
