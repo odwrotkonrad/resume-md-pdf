@@ -6,3 +6,12 @@ example/*
 vendor/
 validation/artifacts/*
 !validation/artifacts/.gitkeep
+!.repo/
+##[>] 🤖
+/AGENTS.md
+/CLAUDE.md
+/assets/data/makefile.agents.md
+/assets/data/repo-structure.md
+/assets/data/conventions.md
+/assets/docs-agents/purpose.md
+##[<] 🤖
