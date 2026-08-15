@@ -6,3 +6,4 @@ example/*
 vendor/
 validation/artifacts/*
 !validation/artifacts/.gitkeep
+!.repo/
