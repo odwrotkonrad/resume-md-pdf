@@ -7,11 +7,11 @@ Single-page PDF resume from Markdown
 
 ## What It Is
 
-Single-page PDF resume generator, Markdown in, styled PDF out, Ruby only: kramdown renders Markdown to HTML, ferrum drives headless Chrome to print it, pdf-reader and minitest assert the result. Tracked `example/` resumes are fictional sample data; real resumes live only under gitignored `.user/input/`.
+Single-page PDF resume generator, Markdown in, styled PDF out, Ruby only: kramdown renders Markdown to HTML, ferrum drives headless Chrome to print it, pdf-reader and minitest assert the result. The tracked `example/` resumes are fictional. Real ones live only under gitignored `.user/input/`.
 
 ## Why It Exists
 
-A resume lives best as versioned Markdown, but hand-exporting it to a presentable PDF is manual and unrepeatable. This repo makes the export one command, keeps the styling in plain CSS, and keeps real personal data out of the repository.
+A resume belongs in versioned Markdown, but hand-exporting a presentable PDF is unrepeatable. This repo makes the export one command: styling in plain CSS, real personal data never in the repo.
 
 ## Goals
 
