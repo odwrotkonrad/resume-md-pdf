@@ -4,7 +4,10 @@ workflow:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
+#[why] all CI runs on the self-hosted GKE runners: no SaaS compute minutes remain
 default:
+  tags:
+    - gke-linux-amd64
   image: ruby:3.4
   before_script:
     - bundle install --quiet
