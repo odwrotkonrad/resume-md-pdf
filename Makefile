@@ -23,14 +23,21 @@ render-templates:
 
 ##[>] Setup [genai-include]
 #[what] install ruby gem dependencies (needs ruby + bundler; PDF rendering needs Chrome/Chromium, override binary via BROWSER_PATH)
+#[why] --path vendor/bundle, not a bare `bundle install`: .bundle/config carries that setting but is
+#   gitignored, so a fresh clone would install into the system gem dir and fail without root
 install:
+	@bundle config set --local path vendor/bundle
 	@bundle install
 
 #[why] the repo declares ruby in its devEnv profile, so no host or image has to carry it in advance
 #[what] install this repo's toolchain, then its dependencies
+#[why] debian's ruby ships bundler only as the versioned `bundle3.1`, so a plain `bundle` is missing
+#   on a fresh image even though the gem is present: install it as a user gem to get the unversioned
+#   binary, and put the gem bindir on PATH for the install that follows
 repo-prepare-deps:
 	@che run --profiles=devEnv
-	@$(MAKE) install
+	@command -v bundle >/dev/null || gem install --user-install --no-document bundler
+	@PATH="$$(gem environment gemdir 2>/dev/null)/bin:$$(ruby -e 'print Gem.user_dir' 2>/dev/null)/bin:$$PATH" $(MAKE) install
 
 ##[<] Setup
 
