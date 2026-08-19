@@ -80,6 +80,9 @@ pdf-assertions:
 tag-mint:
   stage: release
   image: $CI_IMAGE
+  #[why] the default before_script installs gems for the ruby image every other job runs on. this
+  #   job runs on ci-linux, which carries no bundler, so it opts out rather than inheriting it
+  before_script: []
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   variables:
