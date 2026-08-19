@@ -3,10 +3,17 @@
 SHELL := zsh
 .SHELLFLAGS := -c
 
-WRAPPERS :=
-COMMANDS := render-templates install generate-pdfs generate-example-pdfs watch-pdfs compare-contents test-pdf repo-ci-prepare-hooks repo-ci-precommit-all
+WRAPPERS := repo-prepare-dev-env
+COMMANDS := semver-next tag-mint render-templates install repo-prepare-deps generate-pdfs generate-example-pdfs watch-pdfs compare-contents test-pdf repo-ci-prepare-hooks repo-ci-precommit-all
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
+
+##[>] Dev Environment [genai-include]
+#[why] render precedes hooks: the docsgen pre-commit hook runs render-templates and fails on drift,
+#   so a fresh clone whose generated files were never rendered would fail its first commit
+#[what] make a fresh clone a working checkout: generated docs, dependencies, git hooks
+repo-prepare-dev-env: render-templates repo-prepare-deps repo-ci-prepare-hooks
+##[<] Dev Environment
 
 ##[>] Docs [genai-include]
 #[what] render *.ontoRepo.tpl onto the repo (makefile.agents.md, repo-structure.md, CLAUDE.md, AGENTS.md, README.md)
@@ -18,6 +25,12 @@ render-templates:
 #[what] install ruby gem dependencies (needs ruby + bundler; PDF rendering needs Chrome/Chromium, override binary via BROWSER_PATH)
 install:
 	@bundle install
+
+#[why] the repo declares ruby in its devEnv profile, so no host or image has to carry it in advance
+#[what] install this repo's toolchain, then its dependencies
+repo-prepare-deps:
+	@che run --profiles=devEnv
+	@$(MAKE) install
 
 ##[<] Setup
 
@@ -45,6 +58,16 @@ compare-contents:
 test-pdf:
 	@bundle exec ruby validation/test_pdf.rb
 ##[<] Validation
+
+##[>] Release [genai-include]
+#[what] print the next semver tag inferred from the last tag..HEAD diff (override: `semver: major|minor|patch` commit token)
+semver-next:
+	@ci/semver-bump.zsh
+
+#[what] mint and push the next semver tag (CI: authed via TAG_TOKEN)
+tag-mint:
+	@ci/tag-mint.zsh
+##[<] Release
 
 ##[>] CI [genai-include]
 #[what] install lefthook git hooks
