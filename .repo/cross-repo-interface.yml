@@ -5,6 +5,8 @@ upstream:
   - prose/doc-templates
   - prose/license
   - infra/oci-images/ci-linux
+  - infra/iac/ci-var/artifact-registry
+  - infra/iac/ci-var/ci-images-ref
 downstream:
   - {name: styled-resume-pdf, type: pdf}
 ##[<] 🤖🤖

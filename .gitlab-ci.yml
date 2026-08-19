@@ -22,7 +22,7 @@ default:
       - unknown_failure
   tags:
     - gke-linux-amd64
-  image: ruby:3.4
+  image: $GRP_VAR_ARTIFACT_REGISTRY_PROXY_DOCKERHUB/library/ruby:3.4
   before_script:
     - bundle install --quiet
 
@@ -32,7 +32,7 @@ stages:
   - release
 
 variables:
-  CI_IMAGE: registry.gitlab.com/konradodwrot/infra/oci-images/ci-linux:latest
+  CI_IMAGE: $GRP_VAR_ARTIFACT_REGISTRY/ci-linux:$GRP_VAR_CI_IMAGES_REF
 
 validate-pre-commit-all:
   stage: validate
