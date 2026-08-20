@@ -22,7 +22,7 @@ default:
       - unknown_failure
   tags:
     - gke-linux-amd64
-  image: $GRP_VAR_ARTIFACT_REGISTRY_PROXY_DOCKERHUB/library/ruby:3.4
+  image: $ARTIFACT_REGISTRY_PROXY_DOCKERHUB/library/ruby:3.4
   before_script:
     - bundle install --quiet
 
@@ -32,7 +32,11 @@ stages:
   - release
 
 variables:
-  CI_IMAGE: $GRP_VAR_ARTIFACT_REGISTRY/ci-linux:$GRP_VAR_CI_IMAGES_REF
+  ARTIFACT_REGISTRY: $GRP_KO_VAR_ARTIFACT_REGISTRY
+  ARTIFACT_REGISTRY_PROXY_DOCKERHUB: $GRP_KO_VAR_ARTIFACT_REGISTRY_PROXY_DOCKERHUB
+  CI_IMAGES_REF: $GRP_KO_VAR_CI_IMAGES_REF
+  PROSE_REF: $GRP_KO_VAR_PROSE_REF
+  CI_IMAGE: $ARTIFACT_REGISTRY/ci-linux:$CI_IMAGES_REF
 
 validate-pre-commit-all:
   stage: validate
@@ -87,6 +91,7 @@ tag-mint:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   variables:
     GIT_DEPTH: "0"
+    TAG_TOKEN: $REPO_VAR_TAG_TOKEN
   script:
     - make tag-mint
 ##[<] 🤖🤖

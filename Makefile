@@ -4,7 +4,7 @@ SHELL := zsh
 .SHELLFLAGS := -c
 
 WRAPPERS := repo-prepare-dev-env
-COMMANDS := semver-next tag-mint render-templates install repo-prepare-deps generate-pdfs generate-example-pdfs watch-pdfs compare-contents test-pdf repo-ci-prepare-hooks repo-ci-precommit-all
+COMMANDS := semver-next tag-mint render-templates repo-render-env install repo-prepare-deps generate-pdfs generate-example-pdfs watch-pdfs compare-contents test-pdf repo-ci-prepare-hooks repo-ci-precommit-all
 
 .PHONY: $(WRAPPERS) $(COMMANDS)
 
@@ -12,13 +12,17 @@ COMMANDS := semver-next tag-mint render-templates install repo-prepare-deps gene
 #[why] render precedes hooks: the docsgen pre-commit hook runs render-templates and fails on drift,
 #   so a fresh clone whose generated files were never rendered would fail its first commit
 #[what] make a fresh clone a working checkout: generated docs, dependencies, git hooks
-repo-prepare-dev-env: render-templates repo-prepare-deps repo-ci-prepare-hooks
+repo-prepare-dev-env: repo-render-env render-templates repo-prepare-deps repo-ci-prepare-hooks
 ##[<] Dev Environment
 
 ##[>] Docs [genai-include]
 #[what] render *.ontoRepo.tpl onto the repo (makefile.agents.md, repo-structure.md, CLAUDE.md, AGENTS.md, README.md)
 render-templates:
 	@che render-templates --profiles=ontoRepo
+
+#[what] render .env.tpl to .env: upstream refs and CI variables via glab, secrets via op
+repo-render-env:
+	@CHE_ENV_UNSET=empty che render-templates --profiles=envSeed
 ##[<] Docs
 
 ##[>] Setup [genai-include]
