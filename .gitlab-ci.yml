@@ -41,6 +41,8 @@ variables:
   CI_IMAGE: $ARTIFACT_REGISTRY/ci-linux:$CI_IMAGES_REF
 
 validate-pre-commit-all:
+  tags:
+    - gke-linux-amd64-small
   stage: validate
   image: $CI_IMAGE
   needs: []
@@ -63,6 +65,8 @@ build-pdf:
     expire_in: 30 days
 
 content-match:
+  tags:
+    - gke-linux-amd64-small
   stage: validate
   needs: []
   script:
@@ -74,6 +78,8 @@ content-match:
       - validation/artifacts/diff.txt
 
 pdf-assertions:
+  tags:
+    - gke-linux-amd64-small
   stage: validate
   needs:
     - build-pdf
@@ -84,6 +90,8 @@ pdf-assertions:
 #   pin a version instead of tracking a moving branch. tag only, no release object: nothing here ships
 #   an artifact
 tag-mint:
+  tags:
+    - gke-linux-amd64-small
   stage: release
   image: $CI_IMAGE
   #[why] the default before_script installs gems for the ruby image every other job runs on. this
