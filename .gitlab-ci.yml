@@ -26,8 +26,6 @@ default:
   before_script:
     - bundle install --quiet
 
-include:
-
 stages:
   - build
   - validate
