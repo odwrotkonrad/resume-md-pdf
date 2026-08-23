@@ -34,14 +34,31 @@ stages:
 variables:
   ARTIFACT_REGISTRY: $GRP_KO_VAR_ARTIFACT_REGISTRY
   ARTIFACT_REGISTRY_PROXY_DOCKERHUB: $GRP_KO_VAR_ARTIFACT_REGISTRY_PROXY_DOCKERHUB
-  CI_IMAGES_REF: $GRP_KO_VAR_CI_IMAGES_REF
+  OCI_IMAGES_CI_LINUX_REF: $GRP_KO_VAR_OCI_IMAGES_CI_LINUX_REF
+  CHE_SCHEMA_REF: $GRP_KO_VAR_CHE_SCHEMA_REF
   PROSE_SPEC_REF: $GRP_KO_VAR_PROSE_SPEC_REF
-  CONFIGS_REF: $GRP_KO_VAR_CONFIGS_REF
   PROSE_ASSETS_REF: $GRP_KO_VAR_PROSE_ASSETS_REF
   MISC_REF: $GRP_KO_VAR_MISC_REF
-  CI_IMAGE: $ARTIFACT_REGISTRY/ci-linux:$CI_IMAGES_REF
+  AI_CONFIGS_REF: $GRP_KO_VAR_AI_CONFIGS_REF
+  CI_IMAGE: $ARTIFACT_REGISTRY/ci-linux:$OCI_IMAGES_CI_LINUX_REF
 
 validate-pre-commit-all:
+  rules:
+    - changes:
+        - .gitlab-ci.yml
+        - .env.tpl
+        - che.yml
+        - Makefile
+        - lefthook.yml
+        - .repo/*.tpl
+        - .repo/dependency-graph.yml
+        - .repo/artifacts-consumed.yml
+        - scripts/**/*
+        - validation/**/*
+        - example/**/*
+        - Gemfile
+        - Gemfile.lock
+        - README.md
   tags:
     - gke-linux-amd64-small
   stage: validate
@@ -53,6 +70,14 @@ validate-pre-commit-all:
     - git diff --exit-code HEAD
 
 build-pdf:
+  rules:
+    - changes:
+        - scripts/**/*
+        - example/**/*
+        - Gemfile
+        - Gemfile.lock
+        - Makefile
+        - .gitlab-ci.yml
   stage: build
   variables:
     BROWSER_PATH: /usr/bin/chromium
@@ -66,6 +91,14 @@ build-pdf:
     expire_in: 30 days
 
 content-match:
+  rules:
+    - changes:
+        - scripts/**/*
+        - validation/**/*
+        - example/**/*
+        - Gemfile
+        - Gemfile.lock
+        - .gitlab-ci.yml
   tags:
     - gke-linux-amd64-small
   stage: validate
@@ -79,6 +112,14 @@ content-match:
       - validation/artifacts/diff.txt
 
 pdf-assertions:
+  rules:
+    - changes:
+        - scripts/**/*
+        - validation/**/*
+        - example/**/*
+        - Gemfile
+        - Gemfile.lock
+        - .gitlab-ci.yml
   tags:
     - gke-linux-amd64-small
   stage: validate
@@ -100,9 +141,16 @@ tag-mint:
   before_script: []
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
+        - scripts/**/*
+        - validation/**/*
+        - example/**/*
+        - che.yml
+        - Makefile
   variables:
     GIT_DEPTH: "0"
     TAG_TOKEN: $REPO_VAR_TAG_TOKEN
   script:
     - make tag-mint
+
 ##[<] 🤖🤖

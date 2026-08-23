@@ -1,0 +1,7 @@
+##[>] 🤖
+produces:
+  - uri: gitlab.com/konradodwrot/resume-md-pdf
+    type: gitRepository
+    versionEnvVar: RESUME_MD_PDF_REF
+    version: v0.0.19
+##[<] 🤖
