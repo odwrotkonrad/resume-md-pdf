@@ -1,5 +1,5 @@
 ##[>] 🤖
-produces:
+downstream:
   - uri: gitlab.com/konradodwrot/resume-md-pdf
     type: gitRepository
     versionEnvVar: RESUME_MD_PDF_REF
