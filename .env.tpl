@@ -7,5 +7,5 @@ ARTIFACT_REGISTRY={{ shell "glab variable get -g konradodwrot GRP_KO_VAR_ARTIFAC
 ARTIFACT_REGISTRY_PROXY_DOCKERHUB={{ shell "glab variable get -g konradodwrot GRP_KO_VAR_ARTIFACT_REGISTRY_PROXY_DOCKERHUB" }}
 OCI_IMAGES_CI_LINUX_REF={{ shell "glab variable get -g konradodwrot GRP_KO_VAR_OCI_IMAGES_CI_LINUX_REF" }}
 CHE_SCHEMA_REF={{ shell "glab variable get -g konradodwrot GRP_KO_VAR_CHE_SCHEMA_REF" }}
-TAG_TOKEN={{ shell "glab variable get -R konradodwrot/resume-md-pdf REPO_VAR_TAG_TOKEN" }}
+TAG_TOKEN={{ shell "glab variable get -R konradodwrot/resume-md-pdf REPO_PROTECTED_VAR_BOT_TAG_TOKEN" }}
 ##[<] 🤖🤖
