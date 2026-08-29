@@ -7,6 +7,7 @@ vendor/
 validation/artifacts/*
 !validation/artifacts/.gitkeep
 !.repo/
+!.che/
 ##[>] 🤖
 /AGENTS.md
 /CLAUDE.md
