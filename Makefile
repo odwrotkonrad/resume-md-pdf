@@ -1,33 +1,24 @@
 ##[>] 🤖🤖
-#[what] Project's Makefile
 SHELL := zsh
 .SHELLFLAGS := -c
 
-WRAPPERS := repo-prepare-dev-env
-COMMANDS := semver-next tag-mint install repo-prepare-deps generate-pdfs generate-example-pdfs watch-pdfs compare-contents test-pdf repo-ci-prepare-hooks repo-ci-precommit-all
+COMMANDS := che-install generic-setup install repo-prepare-deps generate-pdfs generate-example-pdfs watch-pdfs compare-contents test-pdf
 
-#[why] render-templates, repo-ci-render-templates and repo-render-env are declared .PHONY by the shared .mk, never here: a .PHONY name make cannot build reports "nothing to be done" and exits 0, turning a failed bootstrap into a silent success
-.PHONY: $(WRAPPERS) $(COMMANDS)
+.PHONY: $(COMMANDS)
 
-##[>] Dev Environment [genai-include]
-#[why] render precedes hooks: the docsgen pre-commit hook runs render-templates and fails on drift,
-#   so a fresh clone whose generated files were never rendered would fail its first commit
-#[what] make a fresh clone a working checkout: generated docs, dependencies, git hooks
-repo-prepare-dev-env: repo-render-env render-templates repo-prepare-deps repo-ci-prepare-hooks
-##[<] Dev Environment
-
-##[>] Docs [genai-include]
-#[what] shared render targets, authored in cross-repo/misc and rendered here by the bootstrap rule below
--include shared/ci/make/render.mk
-
-#[why] gitignored shared/ tree: a fresh clone has no render.mk, so make renders it, then re-execs itself with the shared targets defined
-#[why] CI carries every ref as a job variable and has no glab auth: seed .env only when the environment names no MISC_REF
-shared/ci/make/render.mk:
-	@[[ -n $${MISC_REF:-} ]] || CHE_ENV_UNSET=empty $${CHE_BIN:-che} render-templates --profiles=envSeed
-	@$${CHE_BIN:-che} render-templates --profiles=bootstrapCrossRepoCI
-##[<] Docs
+-include shared/generic/make/generic.mk
 
 ##[>] Setup [genai-include]
+#[what] install the latest released che into ~/.local/bin, only when the one on PATH is older
+che-install:
+	@curl -fsSL https://konradodwrot.gitlab.io/go-modules/che-install.sh | sh -s -- --skip-if-present-is-newer
+
+#[what] render the generic consumer payload (generic.mk, lefthook.yml, shared/generic/) at the pinned CENTRALIZED_ASSETS_GENERIC_REF
+generic-setup:
+	@$${CHE_BIN:-che} render-templates --profiles=genericSetup
+
+shared/generic/make/generic.mk: generic-setup
+
 #[what] install ruby gem dependencies (needs ruby + bundler; PDF rendering needs Chrome/Chromium, override binary via BROWSER_PATH)
 #[why] --path vendor/bundle, not a bare `bundle install`: .bundle/config carries that setting but is
 #   gitignored, so a fresh clone would install into the system gem dir and fail without root
@@ -44,7 +35,6 @@ repo-prepare-deps:
 	@che run --profiles=devEnv
 	@command -v bundle >/dev/null || gem install --user-install --no-document bundler
 	@PATH="$$(gem environment gemdir 2>/dev/null)/bin:$$(ruby -e 'print Gem.user_dir' 2>/dev/null)/bin:$$PATH" $(MAKE) install
-
 ##[<] Setup
 
 ##[>] PDF [genai-include]
@@ -71,24 +61,4 @@ compare-contents:
 test-pdf:
 	@bundle exec ruby validation/test_pdf.rb
 ##[<] Validation
-
-##[>] Release [genai-include]
-#[what] print the next semver tag inferred from the last tag..HEAD diff (override: `semver: major|minor|patch` commit token)
-semver-next: render-templates
-	@shared/ci/semver-bump.zsh
-
-#[what] mint and push the next semver tag (CI: authed via TAG_TOKEN)
-tag-mint: render-templates
-	@shared/ci/tag-mint.zsh
-##[<] Release
-
-##[>] CI [genai-include]
-#[what] install lefthook git hooks
-repo-ci-prepare-hooks:
-	@lefthook install --force
-
-#[what] run pre-commit hooks over all files (not just staged)
-repo-ci-precommit-all: repo-ci-prepare-hooks
-	@lefthook run pre-commit --all-files --force
-##[<] CI
 ##[<] 🤖🤖
