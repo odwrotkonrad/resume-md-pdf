@@ -39,8 +39,8 @@ variables:
   PROSE_SPEC_REF: $GRP_KO_VAR_PROSE_SPEC_REF
   PROSE_ASSETS_REF: $GRP_KO_VAR_PROSE_ASSETS_REF
   MISC_REF: $GRP_KO_VAR_MISC_REF
-  #[why] nothing here reads it, misc's claude-agents profile does: che parses every profile in
-  #   a remote spec at init, so including misc needs AI_TOOLS_CONFIGS_REF resolvable
+  #[why] nothing here reads it: che parses every profile in a remote spec at init, so including
+  #   misc needs every ref its spec names resolvable
   AI_TOOLS_CONFIGS_REF: $GRP_KO_VAR_AI_TOOLS_CONFIGS_REF
   CI_IMAGE: $ARTIFACT_REGISTRY/ci-linux:$OCI_IMAGES_CI_LINUX_REF
 
@@ -48,8 +48,7 @@ validate-pre-commit-all:
   rules:
     - changes:
         - .gitlab-ci.yml
-        - .env.tpl
-        - che.yml
+        - .che/**/*
         - Makefile
         - lefthook.yml
         - .repo/*.tpl
@@ -148,7 +147,7 @@ tag-mint:
         - scripts/**/*
         - validation/**/*
         - example/**/*
-        - che.yml
+        - .che/**/*
         - Makefile
   variables:
     GIT_DEPTH: "0"
