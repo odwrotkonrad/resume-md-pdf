@@ -1,3 +1,5 @@
+# [>] generic
+# [<] generic
 .user/
 example/*
 !example/resume.md
@@ -6,16 +8,5 @@ example/*
 vendor/
 validation/artifacts/*
 !validation/artifacts/.gitkeep
-!.repo/
-!.che/
-##[>] 🤖
-/AGENTS.md
-/CLAUDE.md
-/assets/data/makefile.agents.md
-/assets/data/repo-structure.md
-/assets/docs-agents/purpose.md
 /shared/
-/.env
-/lefthook.yml
-##[<] 🤖
 /.che/cheVariables.local.yml
