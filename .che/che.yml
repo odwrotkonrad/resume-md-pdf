@@ -1,24 +1,37 @@
 # yaml-language-server: $schema=https://gitlab.com/api/v4/projects/konradodwrot%2Fgo-modules/packages/generic/che-schema/v0.0.1-che-min-v0.0.96/che.schema.json
 ##[>] 🤖🤖
-include:
-  sources:
-    - {source: shared/generic/che, optional: true}
+specsInclude:
+  - url: gitlab.com/konradodwrot/centralized/assets/generic
+    ref: "${{ var.CENTRALIZED_ASSETS_GENERIC_REF }}"
+    specDirPath: consumer-repo-config
+    variables:
+      repo: resume-md-pdf
 
-devEnv:
-  options:
-    autoDiscover: false
-  include:
-    installPackages:
-      - ruby
+profilesDefinitions:
+  generic/env:
+    type: repo-git-untracked
+    include:
+      renderTemplates:
+        - source: tpl/repo-git-tracked/env.tpl
+          dest:
+            - path: .env
+              options:
+                writeType: mergeUpsert
 
-genericSetup:
-  options:
-    autoDiscover: false
-  include:
-    profiles:
-      - source: "git::https://gitlab.com/konradodwrot/centralized/assets/generic@${{ var.CENTRALIZED_ASSETS_GENERIC_REF }}"
-        spec: consumer-repo-config
-        profile: setup
-        variables:
-          repo: resume-md-pdf
+  devEnv:
+    type: repo-git-untracked
+    include:
+      installPackages:
+        - ruby
+
+variablesDefinitions:
+  all: {scope: recursiveSpecsAndProfiles, required: true}
+  specVariablesDefinitions:
+    CENTRALIZED_ASSETS_GENERIC_REF: {}
+    CENTRALIZED_ASSETS_PROSE_AI_REF: {}
+    CENTRALIZED_ASSETS_PROSE_COMMON_REF: {}
+    CENTRALIZED_ASSETS_PROSE_HUMAN_REF: {}
+    CHE_SCHEMA_REF: {}
+    OCI_IMAGES_CI_LINUX_REF: {}
+    PROSE_SPEC_REF: {}
 ##[<] 🤖🤖
