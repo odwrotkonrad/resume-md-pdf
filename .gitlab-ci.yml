@@ -3,14 +3,21 @@ include:
   - project: konradodwrot/centralized/assets/generic
     ref: $GRP_KO_VAR_CENTRALIZED_ASSETS_GENERIC_REF
     file:
+      - consumer-repo-config/ci/templates/EmitEvents.gitlab-ci.yml
       - consumer-repo-config/files-generation/templates/FilesTrackedVerify.gitlab-ci.yml
+      - consumer-repo-config/ci/templates/UpstreamEnvDrift.gitlab-ci.yml
       - consumer-repo-config/precommit-lefthook/templates/PrecommitChanged.gitlab-ci.yml
       - consumer-repo-config/precommit-lefthook/templates/PrecommitAll.gitlab-ci.yml
   - project: konradodwrot/centralized/assets/generic
     ref: $GRP_KO_VAR_CENTRALIZED_ASSETS_GENERIC_REF
     file: consumer-repo-config/release/templates/TagMint.gitlab-ci.yml
     inputs:
-      changes: [scripts/**/*, validation/**/*, example/**/*, .che/**/*, Makefile]
+      changes:
+        - scripts/**/*
+        - validation/**/*
+        - example/**/*
+        - .che/**/*
+        - Makefile
 
 workflow:
   rules:
@@ -43,6 +50,7 @@ stages:
   - build
   - validate
   - release
+  - notify
 
 variables:
   ARTIFACT_REGISTRY: $GRP_KO_VAR_ARTIFACT_REGISTRY
@@ -56,19 +64,23 @@ variables:
 
 #[why] the generic jobs run on ci-linux, which carries no bundler: they opt out of the ruby before_script
 generic:files-tracked-verify:
-  tags: [gke-linux-amd64-small]
+  tags:
+    - gke-linux-amd64-small
   before_script: []
 
 generic:precommit-changed:
-  tags: [gke-linux-amd64-small]
+  tags:
+    - gke-linux-amd64-small
   before_script: []
 
 generic:precommit-all:
-  tags: [gke-linux-amd64-small]
+  tags:
+    - gke-linux-amd64-small
   before_script: []
 
 generic:tag-mint:
-  tags: [gke-linux-amd64-small]
+  tags:
+    - gke-linux-amd64-small
   before_script: []
 
 build-pdf:
@@ -129,4 +141,8 @@ pdf-assertions:
     - build-pdf
   script:
     - bundle exec ruby validation/test_pdf.rb
+
+emit-events:
+  extends: .emit-events
+  stage: notify
 ##[<] 🤖🤖
