@@ -8,7 +8,6 @@ dependsOn:
       type: gitRepository
     - uri: us-central1-docker.pkg.dev/staging-499418/ci/ci-linux
       type: ociImage
-  repoContents:
     - uri: gitlab.com/konradodwrot/centralized/assets/prose/human
       type: gitRepository
     - uri: gitlab.com/konradodwrot/centralized/assets/prose/ai
